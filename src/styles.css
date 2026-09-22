@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+@theme {
+  --color-night: #09080c;
+  --color-night-2: #121118;
+  --color-ivory: #efe6d4;
+  --color-ivory-dim: #c4bba8;
+  --color-muted: #8e887e;
+  --color-hortensia: #7a88b0;
+  --color-hortensia-deep: #4a5470;
+  --color-crystal: #f7f1e4;
+  --color-line: color-mix(in oklab, var(--color-ivory) 14%, transparent);
+
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body: "Outfit", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --ease-out-ritual: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-ritual: cubic-bezier(0.4, 0, 1, 1);
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-night);
+    color: var(--color-ivory);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-night);
+    color: var(--color-ivory);
+    min-height: 100dvh;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    font-family: var(--font-display);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .light-field {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(
+        28rem circle at var(--lx, 50%) var(--ly, 42%),
+        color-mix(in oklab, var(--color-ivory) calc(var(--light-gain, 0) * 18%), transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        12rem circle at var(--lx, 50%) var(--ly, 42%),
+        color-mix(in oklab, var(--color-hortensia) calc(var(--light-gain, 0) * 28%), transparent),
+        transparent 58%
+      );
+    mix-blend-mode: screen;
+    opacity: 0.9;
+    transition: opacity 400ms var(--ease-out-ritual);
+  }
+
+  .veil-grain {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        118deg,
+        transparent 0 11px,
+        color-mix(in oklab, var(--color-ivory) 4.5%, transparent) 11px 12px
+      ),
+      repeating-linear-gradient(
+        -16deg,
+        transparent 0 17px,
+        color-mix(in oklab, var(--color-hortensia) 5%, transparent) 17px 18px
+      );
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 78%);
+    opacity: 0.7;
+  }
+
+  .vignette {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 38%, var(--color-night) 92%);
+  }
+
+  .hold-ring {
+    transform: rotate(-90deg);
+  }
+
+  .chapter-enter {
+    animation: chapter-in 480ms var(--ease-out-ritual) both;
+  }
+
+  .stagger-1 { animation-delay: 0ms; }
+  .stagger-2 { animation-delay: 80ms; }
+  .stagger-3 { animation-delay: 140ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 280ms; }
+
+  .bloom-burst {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    background: var(--color-crystal);
+    box-shadow:
+      0 0 40px 18px color-mix(in oklab, var(--color-ivory) 70%, transparent),
+      0 0 120px 48px color-mix(in oklab, var(--color-hortensia) 45%, transparent);
+    animation: bloom 900ms var(--ease-out-ritual) forwards;
+  }
+}
+
+@keyframes chapter-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes bloom {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(140);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.sigil-pulse {
+  animation: pulse-soft 3.6s var(--ease-out-ritual) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-enter,
+  .bloom-burst,
+  .sigil-pulse,
+  .light-field {
+    animation: none !important;
+    transition: none !important;
+    filter: none !important;
+  }
+
+  .bloom-burst {
+    opacity: 0;
+  }
+}
